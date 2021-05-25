@@ -4,6 +4,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import hidaka from '../assets/img/hidaka.jpg'
 import kitazima from '../assets/img/kitazima.jpg'
+import { createStyles, makeStyles } from '@material-ui/core';
+
 
 const Chat = (props) => {
 
