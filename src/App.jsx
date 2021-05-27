@@ -1,8 +1,9 @@
 import logo from './logo.svg';
 import React from 'react';
-import defaultDataset from './dataset'
+import defaultDataset from './dataset.json'
 import './assets/styles/style.css'
 import {AnswersList,Chats} from "./components/index"
+import FormDialog from './components/Forms/FormDialog';
 
 class App extends React.Component {
 
@@ -16,7 +17,11 @@ class App extends React.Component {
         dataset : defaultDataset, //データセットの設定。
         open : false //モーダルウィンドウなどの設定
     }
+
     this.selectAnswer = this.selectAnswer.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    this.handleClickOpen = this.handleClickOpen.bind(this)
+
   }
 
   displayNextquestion = (nextQuestionId) => {
@@ -34,15 +39,33 @@ class App extends React.Component {
 
   }
 
+  handleClickOpen = () => {
+    this.setState({open:true})
+  };
+
+  handleClose = () => {
+      this.setState({open:false})
+  };
+
   selectAnswer = (selectedAnswer,nextQuestionId) => {
     switch(true){
 
       case(nextQuestionId === 'init'):
-        this.displayNextquestion(nextQuestionId)
+        setTimeout(() => this.displayNextquestion(nextQuestionId),1000)
+        break;
+
+      case(/^https:*/.test(nextQuestionId)): //指定した文字列であればtest関数はtrueを返す。
+        const a = document.createElement('a')
+        a.href = nextQuestionId;
+        a.target = '_blank'
+        a.click()
+        break;
+      
+      case(nextQuestionId === 'contact'):
+        this.handleClickOpen()
         break;
 
       default:
-    
         const chats = this.state.chats
         chats.push({
           text : selectedAnswer,
@@ -54,7 +77,7 @@ class App extends React.Component {
           chats : chats
         })
 
-        this.displayNextquestion(nextQuestionId)
+        setTimeout(() => this.displayNextquestion(nextQuestionId),500)
         break;
 
     }
@@ -96,6 +119,13 @@ class App extends React.Component {
 
   }
 
+  componentDidUpdate(){
+    const scrollArea = document.getElementById('scroll-area')
+    if(scrollArea){
+      scrollArea.scrollTop = scrollArea.scrollHeight
+    }
+  }
+
   //描画メソッド
   render(){
     return(
@@ -106,6 +136,7 @@ class App extends React.Component {
             answers={this.state.answers}
             select={this.selectAnswer} 
           />
+          <FormDialog open={this.state.open} handleClose={this.handleClose} />
         </div> 
       </section>
     )
