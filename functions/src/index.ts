@@ -12,6 +12,9 @@ const sendResponse = (response: functions.Response, statusCode: number, body: an
     });
 };
 
+const i: number = 1
+console.log(i)
+
 export const addDataset = functions.https.onRequest(async (req : any, res : any) => {
     if (req.method !== "POST") {
         sendResponse(res, 405, {error: "Invalid Request!"});
